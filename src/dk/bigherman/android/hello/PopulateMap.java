@@ -10,7 +10,6 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
 import com.google.android.maps.GeoPoint;
-import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
 
 import android.app.ProgressDialog;

@@ -114,7 +114,7 @@ public class DataBaseHelper extends SQLiteOpenHelper
 	    	//transfer bytes from the inputfile to the outputfile
 	    	byte[] buffer = new byte[1024];
 	    	int length;
-	    	while ((length = myInput.read(buffer))>0)
+	    	while ( (length = myInput.read(buffer)) > 0)
 	    	{
 	    		myOutput.write(buffer, 0, length);
 	    	}
@@ -180,12 +180,12 @@ public class DataBaseHelper extends SQLiteOpenHelper
 			ArrayList<Airfield> airfieldsInArea = new ArrayList<Airfield>();
 			Airfield airfield;
 			
-			Cursor myCursor = myDataBase.rawQuery("SELECT icao, lat, long, name FROM airfields WHERE tilerow >" + minRow +" AND tileRow<" + maxRow + " AND tilecol>" + minCol + " AND tilecol<" + maxCol, null);
+			Cursor myCursor = myDataBase.rawQuery("SELECT icao, lat, long, name FROM airfields "
+					+ "WHERE tilerow >" + minRow +" AND tileRow<" + maxRow + " AND tilecol>" + minCol + " AND tilecol<" + maxCol, null);
 			
 			myCursor.moveToNext();
 			
-			while (!myCursor.isAfterLast())
-			{
+			while (!myCursor.isAfterLast()) {
 				airfield = new Airfield (myCursor.getString(0), myCursor.getDouble(1), myCursor.getDouble(2), myCursor.getString(3));
 				airfieldsInArea.add(airfield);
 				myCursor.moveToNext();

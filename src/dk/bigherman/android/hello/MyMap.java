@@ -1,27 +1,15 @@
 package dk.bigherman.android.hello;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.StringReader;
-import java.net.URL;
 import java.util.List;
 import java.util.ArrayList;
 
 import com.google.android.maps.*;
 
-import android.app.AlertDialog;
-import android.content.Context;
 import android.database.SQLException;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
-
-import com.google.android.maps.MapView.LayoutParams;  
-import android.view.View;
-import android.widget.LinearLayout;
-
 import org.xmlpull.v1.*;
 
 public class MyMap extends MapActivity 
@@ -37,27 +25,17 @@ public class MyMap extends MapActivity
         setContentView(R.layout.main);
         
         mapView = (MapView) findViewById(R.id.mapView);
-        LinearLayout zoomLayout = (LinearLayout)findViewById(R.id.zoom);  
-        View zoomView = mapView.getZoomControls(); 
- 
-        zoomLayout.addView(zoomView, 
-            new LinearLayout.LayoutParams(
-                LayoutParams.WRAP_CONTENT, 
-                LayoutParams.WRAP_CONTENT)); 
+        mapView.setBuiltInZoomControls(true); 
         mapView.displayZoomControls(true);
         
-        try
-        {
+        try {
         	initMap();
-        }
-        catch (IOException ex)
-        {
+        } catch (IOException ex) {
         	System.out.println("Map Init Error");
-        }
-        catch (XmlPullParserException ex)
-        {
+        } catch (XmlPullParserException ex) {
         	System.out.println("XML Parser Error");
         }
+        
         System.out.println("All done");
     }
 
@@ -105,10 +83,11 @@ public class MyMap extends MapActivity
 	    
 	    
 	    
-	   mapOverlays.add(itemizedoverlay);
+	    mapOverlays.add(itemizedoverlay);
 	    
     //    mapOverlays.add((Overlay)(new PopulateMap(this, airfields).execute(itemizedoverlay)));
         mapView.invalidate();
+        
         Log.i("airfields","Map Invalidated");
 	    
 	    Log.i("airfields",String.valueOf(airfields.size()));
