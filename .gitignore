@@ -12,8 +12,6 @@
 bin/
 gen/
 
-res/layout/main.xml
-
 # Local configuration file (sdk path, etc)
 local.properties
 
