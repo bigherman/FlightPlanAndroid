@@ -101,96 +101,18 @@ public class MyMap extends MapActivity
 	    mapView.getController().setCenter(aarhus);
 	    mapView.getController().setZoom(8);
 	    
-	    XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
-        factory.setNamespaceAware(true);
-        XmlPullParser xpp = factory.newPullParser();
+	    new PopulateMap(this, airfields).execute(itemizedoverlay);
 	    
-	    Log.i("airfields",String.valueOf(airfields.size()));
-        for (int i=0; i<airfields.size();i++)
-	    {
-        	Log.i("airfields", "Next airfield call");
-        	
-		    URL url = new URL("http://api.geonames.org/weatherIcao?ICAO=" + airfields.get(i).getIcaoCode() + "&username=bigherman");
-		    
-		    int lat = 0;
-		    int lng = 0;
-		    
-		    BufferedReader in = new BufferedReader(
-		            new InputStreamReader(
-		            url.openStream()));
-	
-	        String line;
-	        StringBuffer result = new StringBuffer();
-	        while ((line = in.readLine()) != null) 
-	        {
-	        	result.append(line);
-	        }
-	        in.close();
-	
-	        xpp.setInput( new StringReader (result.toString()));
-	        String elementContent = null;
-	        String metar = "No metar available";
-	        System.out.println(airfields.get(i).getName());
-	        System.out.println(airfields.get(i).getIcaoCode());
-	        String stationName = "";
-	        
-	        int eventType = xpp.getEventType();
-	        String tag = null;
-	        
-	        do
-	        {    
-		        xpp.next();  
-		        eventType = xpp.getEventType();  
-		        switch(eventType)
-		        {
-		        	case XmlPullParser.TEXT: 
-			        	elementContent = xpp.getText();
-			        	
-			        	if(tag.equals("lat"))
-				        {
-				        	lat = (int)(Double.parseDouble(elementContent)*1e6);
-				        	
-				        	System.out.println(lat);
-				        	//Log.d("text", String.valueOf(lat));
-				        }
-				        else if (tag.equals("lng"))
-				        {
-				        	lng = (int)(Double.parseDouble(elementContent)*1e6); 
-				        	
-				        	System.out.println(lng);
-				        	//Log.d("text", String.valueOf(lng));
-				        }
-				        else if (tag.equals("observation"))
-				        {
-				        	metar = elementContent;
-				        }
-				        else if (tag.equals("stationName"))
-				        {
-				        	stationName = elementContent;
-				        }
-			        	break;
-		        	
-		        	case XmlPullParser.START_TAG:
-		        		tag = xpp.getName();
-		        		//Log.d("tag", tag);
-		        		break;
-		        	
-		        	default:
-		        		break;
-		        }   
-	        } while (eventType != XmlPullParser.END_DOCUMENT); 
-	        
-	        if(lat != 0 && lng != 0)
-	        {
-		        GeoPoint point = new GeoPoint(lat,lng);
-		        OverlayItem overlayitem = new OverlayItem(point, stationName, metar);
-		        itemizedoverlay.addOverlay(overlayitem);
-	        }
-	    }
-        
-        mapOverlays.add(itemizedoverlay);
+	    
+	    
+	   mapOverlays.add(itemizedoverlay);
+	    
+    //    mapOverlays.add((Overlay)(new PopulateMap(this, airfields).execute(itemizedoverlay)));
         mapView.invalidate();
         Log.i("airfields","Map Invalidated");
+	    
+	    Log.i("airfields",String.valueOf(airfields.size()));
+ 
 	}
 
     @Override
