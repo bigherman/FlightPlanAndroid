@@ -10,12 +10,21 @@ import android.database.SQLException;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
+
 import org.xmlpull.v1.*;
 
 public class MyMap extends MapActivity 
 {
 	private MapView mapView;
-    MapController mc;
+    private MapController mc;
+    private MapOverlay mapOverlay;
+    
+    public MyMap()
+    {
+    	
+    	//this.sc.setGeoHelper(new GeoHelper());
+    }
 	
     /** Called when the activity is first created. */
     @Override
@@ -24,9 +33,15 @@ public class MyMap extends MapActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         
+        
+        
         mapView = (MapView) findViewById(R.id.mapView);
         mapView.setBuiltInZoomControls(true); 
         mapView.displayZoomControls(true);
+        
+        MapOverlay mapOverlay = new MapOverlay();
+        List<Overlay> overlays = mapView.getOverlays();
+        overlays.add(mapOverlay);
         
         try {
         	initMap();
@@ -46,24 +61,15 @@ public class MyMap extends MapActivity
 	{
 		DataBaseHelper myDbHelper = new DataBaseHelper(this);
 		Log.i("airfields", "Start db load");
-        try 
-        {
+        try {
         	myDbHelper.createDataBase();
-	 	} 
-        catch (IOException ioe) 
-        {
+        	myDbHelper.openDataBase();
+	 	} catch (IOException ioe) {
 	 		throw new Error("Unable to create database");
-	 	}
-	 
-	 	try 
-	 	{
-	 		myDbHelper.openDataBase();
-	 	}
-	 	catch(SQLException sqle)
-	 	{
+	 	} catch(SQLException sqle) {
 	 		throw sqle;
 	 	}
-	 	
+	 
 	 	ArrayList<Airfield> airfields = myDbHelper.airfieldsInArea(140, 150, 175, 192);
         myDbHelper.close();
         
@@ -79,19 +85,12 @@ public class MyMap extends MapActivity
 	    mapView.getController().setCenter(aarhus);
 	    mapView.getController().setZoom(8);
 	    
-	    new PopulateMap(this, airfields).execute(itemizedoverlay);
-	    
-	    
-	    
+	//    new PopulateMap(this, airfields).execute(itemizedoverlay);
 	    mapOverlays.add(itemizedoverlay);
 	    
-    //    mapOverlays.add((Overlay)(new PopulateMap(this, airfields).execute(itemizedoverlay)));
         mapView.invalidate();
-        
         Log.i("airfields","Map Invalidated");
-	    
 	    Log.i("airfields",String.valueOf(airfields.size()));
- 
 	}
 
     @Override
@@ -99,4 +98,6 @@ public class MyMap extends MapActivity
     {
     	return false;
     }
+    
+
 }

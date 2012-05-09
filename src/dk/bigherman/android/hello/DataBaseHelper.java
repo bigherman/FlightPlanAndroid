@@ -180,13 +180,13 @@ public class DataBaseHelper extends SQLiteOpenHelper
 			ArrayList<Airfield> airfieldsInArea = new ArrayList<Airfield>();
 			Airfield airfield;
 			
-			Cursor myCursor = myDataBase.rawQuery("SELECT icao, lat, long, name FROM airfields "
+			Cursor myCursor = myDataBase.rawQuery("SELECT icao, lat, long, tilecol, tilerow, name FROM airfields "
 					+ "WHERE tilerow >" + minRow +" AND tileRow<" + maxRow + " AND tilecol>" + minCol + " AND tilecol<" + maxCol, null);
 			
 			myCursor.moveToNext();
 			
 			while (!myCursor.isAfterLast()) {
-				airfield = new Airfield (myCursor.getString(0), myCursor.getDouble(1), myCursor.getDouble(2), myCursor.getString(3));
+				airfield = new Airfield (myCursor.getString(0), myCursor.getDouble(1), myCursor.getDouble(2), myCursor.getInt(3), myCursor.getInt(4), myCursor.getString(5));
 				airfieldsInArea.add(airfield);
 				myCursor.moveToNext();
 			}

@@ -118,8 +118,7 @@ public class PopulateMap extends AsyncTask<HelloItemizedOverlay, Void, HelloItem
 		        }
 		    }
 	       
-	       Log.i("PopulateMap", "Out of loop..");
-	        
+	       Log.i("PopulateMap", "Out of loop..");    
 	   } catch (Exception e) {
 		   Log.e("exception", e.getMessage());
 	   }
