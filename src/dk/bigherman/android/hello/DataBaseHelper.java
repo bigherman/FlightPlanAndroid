@@ -10,6 +10,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.*;
+import android.util.Log;
 
 public class DataBaseHelper extends SQLiteOpenHelper
 {		 
@@ -180,8 +181,11 @@ public class DataBaseHelper extends SQLiteOpenHelper
 			ArrayList<Airfield> airfieldsInArea = new ArrayList<Airfield>();
 			Airfield airfield;
 			
+			Log.i("airfieldsInArea", "SELECT icao, lat, long, tilecol, tilerow, name FROM airfields "
+					+ "WHERE tilerow >=" + minRow +" AND tileRow<=" + maxRow + " AND tilecol>=" + minCol + " AND tilecol<=" + maxCol);
+			
 			Cursor myCursor = myDataBase.rawQuery("SELECT icao, lat, long, tilecol, tilerow, name FROM airfields "
-					+ "WHERE tilerow >" + minRow +" AND tileRow<" + maxRow + " AND tilecol>" + minCol + " AND tilecol<" + maxCol, null);
+					+ "WHERE tilerow >=" + minRow +" AND tileRow<=" + maxRow + " AND tilecol>=" + minCol + " AND tilecol<=" + maxCol, null);
 			
 			myCursor.moveToNext();
 			
@@ -192,6 +196,8 @@ public class DataBaseHelper extends SQLiteOpenHelper
 			}
 			
 			myCursor.close();
+			
+			Log.i("airfieldsInArea", "Rows: " + airfieldsInArea.size());
 			
 			return airfieldsInArea;
 		}

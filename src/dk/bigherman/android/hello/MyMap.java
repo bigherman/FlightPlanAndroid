@@ -10,15 +10,11 @@ import android.database.SQLException;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MotionEvent;
-
 import org.xmlpull.v1.*;
 
 public class MyMap extends MapActivity 
 {
 	private MapView mapView;
-    private MapController mc;
-    private MapOverlay mapOverlay;
     
     public MyMap()
     {
@@ -33,15 +29,9 @@ public class MyMap extends MapActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         
-        
-        
         mapView = (MapView) findViewById(R.id.mapView);
         mapView.setBuiltInZoomControls(true); 
         mapView.displayZoomControls(true);
-        
-        MapOverlay mapOverlay = new MapOverlay();
-        List<Overlay> overlays = mapView.getOverlays();
-        overlays.add(mapOverlay);
         
         try {
         	initMap();
