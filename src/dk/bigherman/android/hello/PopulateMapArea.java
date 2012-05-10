@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.database.SQLException;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -18,7 +17,6 @@ public class PopulateMapArea extends AsyncTask<ArrayList<OverlayItem>, Void, Arr
 	private ProgressDialog dialog;
 	private MapView myMap;
 	private MapArea mapArea; 
-	//private ArrayList<OverlayItem> overlayItemList;
 	private AirfieldItemizedOverlay itemizedlist;
 	
 	public PopulateMapArea(MapView myMap, MapArea mapArea, AirfieldItemizedOverlay itemizedlist)
@@ -38,8 +36,6 @@ public class PopulateMapArea extends AsyncTask<ArrayList<OverlayItem>, Void, Arr
         dialog.show();
         
         myMap.getOverlays().clear();
-       // mapOverlays.clear();
-
     }
 	
 	@Override
@@ -63,7 +59,6 @@ public class PopulateMapArea extends AsyncTask<ArrayList<OverlayItem>, Void, Arr
 	 			mapArea.getMaxCol()
 	 	);
         myDbHelper.close();
-		// db shit here
         
 		for (int i=0; i<airfields.size();i++) {
 			String icao = airfields.get(i).getIcaoCode();
@@ -76,12 +71,14 @@ public class PopulateMapArea extends AsyncTask<ArrayList<OverlayItem>, Void, Arr
 			String stationName = airfields.get(i).getName();
 
 			GeoPoint point = new GeoPoint(lat,lng);
-		//	new GeoPoint()
 			OverlayItem overlayitem = new OverlayItem(point, stationName+" (" + icao + ")", metar);
-			//args[0].addOverlay(overlayitem);
 			args[0].add(overlayitem);
 		}
 
+		for (OverlayItem item : args[0]) {
+			this.itemizedlist.addOverlay(item);
+		}
+		
 		Log.i("PopulateMapArea", "Returning data");
 		
 		return args[0];
@@ -90,14 +87,7 @@ public class PopulateMapArea extends AsyncTask<ArrayList<OverlayItem>, Void, Arr
 	protected void onPostExecute(ArrayList<OverlayItem> result)
 	{
 		Log.i("PopulateMapArea", "onPostExecute, result size=" + result.size());
-		/*for (OverlayItem item : result) {
-			this.itemizedlist.addOverlay(item);
-		}
-		this.myMap.postInvalidate();*/
 		
-		for (OverlayItem item : result) {
-			this.itemizedlist.addOverlay(item);
-		}
 		this.myMap.getOverlays().add(this.itemizedlist);
 		this.myMap.invalidate();
 		

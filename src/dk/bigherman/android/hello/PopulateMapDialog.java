@@ -1,27 +1,22 @@
 package dk.bigherman.android.hello;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.jdom2.Document;
 import org.jdom2.Element;
-import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.app.AlertDialog.Builder;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
 public class PopulateMapDialog extends AsyncTask<String, Void, String>
 {
-	//private Builder dialog;
-	//private MyMap myMap
 	private Context mapView;
 	private ProgressDialog dialog;
 	private Builder alertDialog;
@@ -46,7 +41,7 @@ public class PopulateMapDialog extends AsyncTask<String, Void, String>
 	protected String doInBackground(String... params)
 	{
 		String icao;
-		// Following isn't an optimal way of retrieving the ICAO code of the clicked airfield. Am aware..
+		// TODO: Following code isn't an optimal way of retrieving the ICAO code of the clicked airfield.
 		Pattern p = Pattern.compile("^(?:.*)(?:\\((.*)\\))$");
 		Matcher m = p.matcher(params[0]);
 		
@@ -56,29 +51,26 @@ public class PopulateMapDialog extends AsyncTask<String, Void, String>
 			return "ICAO code missing(??)";
 		}
 		
-		// XML parsing code..
-		
 		try {
 			URL url = new URL("http://api.geonames.org/weatherIcao?ICAO=" + icao + "&username=bigherman");
 			
 			SAXBuilder builder = new SAXBuilder();
 			Document document = (Document)builder.build(url);
 			Element rootNode = document.getRootElement();
-			Element observation = rootNode.getChild("observation");
-			//Log.i("PopulateMapDialog", observation.getChildText("observation"));
-			return observation.getChildText("observation");
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JDOMException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			List<Element> children = rootNode.getChildren("observation");
+			Log.i("ob", "Children: " + rootNode.getChildren("observation").size());
+			if (children.size() > 0) {
+				Element observation = children.get(0);
+
+				String singleObservation = observation.getChildText("observation");
+				Log.i("ob", "Observation='" + singleObservation + "'");
+				return observation.getChildText("observation");
+			} else {
+				return "No observation found.";
+			}
+		} catch (Exception e) {
+			return e.getMessage();
 		}
-		
-		return "";
 	}
 	
 	@Override

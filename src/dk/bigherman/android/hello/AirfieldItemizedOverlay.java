@@ -1,8 +1,6 @@
 package dk.bigherman.android.hello;
 
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -18,7 +16,8 @@ public class AirfieldItemizedOverlay extends ItemizedOverlay<OverlayItem>
 {
 	private ArrayList<OverlayItem> mOverlays = new ArrayList<OverlayItem>();
 	private Context mContext;
-	private int clickTrack = 0;
+	private int curLong = 0;
+	private int curLat = 0;
 	public AirfieldItemizedOverlay(Drawable defaultMarker) 
 	{
 		super(boundCenterBottom(defaultMarker));
@@ -53,21 +52,11 @@ public class AirfieldItemizedOverlay extends ItemizedOverlay<OverlayItem>
 	@Override
 	protected boolean onTap(int index) 
 	{
-	  
 		System.out.println(index);
 		OverlayItem item = mOverlays.get(index);
-		//System.out.println(item);
-		//System.out.println(mContext);
 		AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
 		
-		//System.out.println(item.getTitle());
-		//System.out.println(item.getSnippet());
 		dialog.setTitle(item.getTitle());
-		//dialog.setMessage(item.getSnippet());
-		
-		//dialog.setTitle("This is a test!");
-		//dialog.show();
-
 		new PopulateMapDialog(mContext, dialog).execute(item.getTitle());
 		
 		return true;
@@ -77,8 +66,9 @@ public class AirfieldItemizedOverlay extends ItemizedOverlay<OverlayItem>
     @Override
 	public boolean onTouchEvent(MotionEvent event, MapView mapView)
     {
+    	Log.i("onTouchEvent", ""+mapView.getZoomLevel());
     	super.onTouchEvent(event, mapView);
-    	if (event.getAction() == MotionEvent.ACTION_MOVE) {
+    	if (event.getAction() == MotionEvent.ACTION_UP) {
     		GeoPoint geoPoint = mapView.getProjection().fromPixels(0,0);
     		double minLong = (double)geoPoint.getLongitudeE6()/(double)1E6;
     		double maxLat  = (double)geoPoint.getLatitudeE6()/(double)1E6;
@@ -90,25 +80,24 @@ public class AirfieldItemizedOverlay extends ItemizedOverlay<OverlayItem>
     		int maxGridLong = (int)(Math.ceil(maxLong+180));
     		int maxGridLat  = (int)(Math.ceil(maxLat+90));
     		
-    		MapArea mapArea = new MapArea(minGridLat, maxGridLat, minGridLong, maxGridLong);
+    		if (this.curLong != minGridLong || this.curLat != minGridLat) {
+    			MapArea mapArea = new MapArea(minGridLat, maxGridLat, minGridLong, maxGridLong);
 
-    		Log.i("Map", "minLong=" + minLong + ",maxLong=" + maxLong + ",minLat=" + minLat + ",maxLat=" + maxLat);
-    		Log.i("Map - Grid", "minGridLong=" + minGridLong + ",maxGridLong=" + maxGridLong + ",minGridLat=" + minGridLat + ",maxGridLat=" + maxGridLat);
-    		
-    		ArrayList<OverlayItem> overlayItemList = new ArrayList<OverlayItem>();
-    		
-    		new PopulateMapArea(mapView, mapArea, this).execute(overlayItemList);
-  
-    		for (OverlayItem item : overlayItemList) {
-    			this.addOverlay(item);
+    			Log.i("Map", "minLong=" + minLong + ",maxLong=" + maxLong + ",minLat=" + minLat + ",maxLat=" + maxLat);
+    			Log.i("Map - Grid", "minGridLong=" + minGridLong + ",maxGridLong=" + maxGridLong + ",minGridLat=" + minGridLat + ",maxGridLat=" + maxGridLat);
+
+    			ArrayList<OverlayItem> overlayItemList = new ArrayList<OverlayItem>();
+
+    			new PopulateMapArea(mapView, mapArea, this).execute(overlayItemList);
+
+    			for (OverlayItem item : overlayItemList) {
+    				this.addOverlay(item);
+    			}
+    			Log.i("airfields", "Item count" + this.mOverlays.size());  
+
+    			this.curLong = minGridLong;
+    			this.curLat = minGridLat;
     		}
-    	    Log.i("airfields", "Item count" + this.mOverlays.size());    		
-    	   // mapView.invalidate();
-    	    //mapView.refreshDrawableState();
-    	    
-    	    //this.populate();
-
-    	    //Log.i("airfields","Map Invalidated");
         }
 
     	
