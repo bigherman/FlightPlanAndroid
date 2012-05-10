@@ -10,34 +10,42 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.google.android.maps.GeoPoint;
+import com.google.android.maps.MapView;
 import com.google.android.maps.OverlayItem;
 
 public class PopulateMapArea extends AsyncTask<ArrayList<OverlayItem>, Void, ArrayList<OverlayItem>>
 {
 	private ProgressDialog dialog;
-	private Context myMap;
+	private MapView myMap;
 	private MapArea mapArea; 
+	//private ArrayList<OverlayItem> overlayItemList;
+	private HelloItemizedOverlay itemizedlist;
 	
-	public PopulateMapArea(Context myMap, MapArea mapArea)
+	public PopulateMapArea(MapView myMap, MapArea mapArea, HelloItemizedOverlay itemizedlist)
 	{
 		this.myMap = myMap;
 		this.mapArea = mapArea;
+		this.itemizedlist = itemizedlist;
 	}
 	
     @Override
     protected void onPreExecute()
     {
-        dialog = new ProgressDialog(this.myMap);
+        dialog = new ProgressDialog(this.myMap.getContext());
         dialog.setTitle("Loading...");
         dialog.setMessage("Please wait...");
         dialog.setIndeterminate(true);
         dialog.show();
+        
+        myMap.getOverlays().clear();
+       // mapOverlays.clear();
+
     }
 	
 	@Override
 	protected ArrayList<OverlayItem> doInBackground(ArrayList<OverlayItem>... args)
 	{
-		DataBaseHelper myDbHelper = new DataBaseHelper(myMap);
+		DataBaseHelper myDbHelper = new DataBaseHelper(this.myMap.getContext());
 		Log.i("airfields", "Start db load");
         try {
         	myDbHelper.createDataBase();
@@ -66,7 +74,7 @@ public class PopulateMapArea extends AsyncTask<ArrayList<OverlayItem>, Void, Arr
 			String metar = "No metar available";
 			String stationName = airfields.get(i).getName();
 
-			GeoPoint point = new GeoPoint(lat,lng);
+			GeoPoint point = new GeoPoint((int)(lat*1E6),(int)(lng*1E6));
 		//	new GeoPoint()
 			OverlayItem overlayitem = new OverlayItem(point, stationName, metar);
 			//args[0].addOverlay(overlayitem);
@@ -75,13 +83,23 @@ public class PopulateMapArea extends AsyncTask<ArrayList<OverlayItem>, Void, Arr
 
 		Log.i("PopulateMapArea", "Returning data");
 		
-
 		return args[0];
 	}
 	
 	protected void onPostExecute(ArrayList<OverlayItem> result)
 	{
 		Log.i("PopulateMapArea", "onPostExecute, result size=" + result.size());
+		/*for (OverlayItem item : result) {
+			this.itemizedlist.addOverlay(item);
+		}
+		this.myMap.postInvalidate();*/
+		
+		for (OverlayItem item : result) {
+			this.itemizedlist.addOverlay(item);
+		}
+		this.myMap.getOverlays().add(this.itemizedlist);
+		this.myMap.invalidate();
+		
         this.dialog.dismiss();
     }
 }

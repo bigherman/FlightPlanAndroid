@@ -99,18 +99,18 @@ public class HelloItemizedOverlay extends ItemizedOverlay<OverlayItem>
     		
     		ArrayList<OverlayItem> overlayItemList = new ArrayList<OverlayItem>();
     		
-    		new PopulateMapArea(mapView.getContext(), mapArea).execute(overlayItemList);
+    		new PopulateMapArea(mapView, mapArea, this).execute(overlayItemList);
   
     		for (OverlayItem item : overlayItemList) {
     			this.addOverlay(item);
     		}
     	    Log.i("airfields", "Item count" + this.mOverlays.size());    		
-    	    mapView.invalidate();
-    	    mapView.refreshDrawableState();
+    	   // mapView.invalidate();
+    	    //mapView.refreshDrawableState();
     	    
-    	    this.populate();
+    	    //this.populate();
 
-    	    Log.i("airfields","Map Invalidated");
+    	    //Log.i("airfields","Map Invalidated");
     	    this.clickTrack = 0;
     		}
         }
