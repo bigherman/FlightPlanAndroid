@@ -76,7 +76,7 @@ public class MyMap extends MapActivity
 	    mapView.getController().setCenter(aarhus);
 	    mapView.getController().setZoom(8);
 	    
-	//    new PopulateMap(this, airfields).execute(itemizedoverlay);
+	 // new PopulateMap(this, airfields).execute(itemizedoverlay);
 	    mapOverlays.add(itemizedoverlay);
 	    
         mapView.invalidate();

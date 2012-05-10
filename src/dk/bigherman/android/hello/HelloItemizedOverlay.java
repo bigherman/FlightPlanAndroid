@@ -19,6 +19,7 @@ public class HelloItemizedOverlay extends ItemizedOverlay<OverlayItem>
 {
 	private ArrayList<OverlayItem> mOverlays = new ArrayList<OverlayItem>();
 	private Context mContext;
+	private int clickTrack = 0;
 	public HelloItemizedOverlay(Drawable defaultMarker) 
 	{
 		super(boundCenterBottom(defaultMarker));
@@ -77,6 +78,9 @@ public class HelloItemizedOverlay extends ItemizedOverlay<OverlayItem>
     {
     	super.onTouchEvent(event, mapView);
     	if (event.getAction() == MotionEvent.ACTION_UP) {
+    		if (this.clickTrack == 0) {
+    			this.clickTrack = 1;
+    		} else {
     		GeoPoint geoPoint = mapView.getProjection().fromPixels(0,0);
     		double minLong = (double)geoPoint.getLongitudeE6()/(double)1E6;
     		double maxLat  = (double)geoPoint.getLatitudeE6()/(double)1E6;
@@ -100,11 +104,15 @@ public class HelloItemizedOverlay extends ItemizedOverlay<OverlayItem>
     		for (OverlayItem item : overlayItemList) {
     			this.addOverlay(item);
     		}
-
+    	    Log.i("airfields", "Item count" + this.mOverlays.size());    		
     	    mapView.invalidate();
+    	    mapView.refreshDrawableState();
     	    
+    	    this.populate();
+
     	    Log.i("airfields","Map Invalidated");
-        	
+    	    this.clickTrack = 0;
+    		}
         }
 
     	

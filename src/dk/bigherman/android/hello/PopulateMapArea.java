@@ -62,16 +62,20 @@ public class PopulateMapArea extends AsyncTask<ArrayList<OverlayItem>, Void, Arr
 
 			int lat = (int)Math.round(airfields.get(i).getLat());
 			int lng = (int)Math.round(airfields.get(i).getLng());
+			Log.i("airfields", "lat=" + lat + ",long=" + lng);
 			String metar = "No metar available";
 			String stationName = airfields.get(i).getName();
 
 			GeoPoint point = new GeoPoint(lat,lng);
+		//	new GeoPoint()
 			OverlayItem overlayitem = new OverlayItem(point, stationName, metar);
 			//args[0].addOverlay(overlayitem);
 			args[0].add(overlayitem);
 		}
 
 		Log.i("PopulateMapArea", "Returning data");
+		
+
 		return args[0];
 	}
 	
