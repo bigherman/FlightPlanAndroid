@@ -19,9 +19,9 @@ public class PopulateMapArea extends AsyncTask<ArrayList<OverlayItem>, Void, Arr
 	private MapView myMap;
 	private MapArea mapArea; 
 	//private ArrayList<OverlayItem> overlayItemList;
-	private HelloItemizedOverlay itemizedlist;
+	private AirfieldItemizedOverlay itemizedlist;
 	
-	public PopulateMapArea(MapView myMap, MapArea mapArea, HelloItemizedOverlay itemizedlist)
+	public PopulateMapArea(MapView myMap, MapArea mapArea, AirfieldItemizedOverlay itemizedlist)
 	{
 		this.myMap = myMap;
 		this.mapArea = mapArea;
@@ -66,6 +66,7 @@ public class PopulateMapArea extends AsyncTask<ArrayList<OverlayItem>, Void, Arr
 		// db shit here
         
 		for (int i=0; i<airfields.size();i++) {
+			String icao = airfields.get(i).getIcaoCode();
 			Log.i("airfields", "Next airfield call, ICAO=" + airfields.get(i).getIcaoCode());
 
 			int lat = (int)(airfields.get(i).getLat()*(double)1E6);
@@ -76,7 +77,7 @@ public class PopulateMapArea extends AsyncTask<ArrayList<OverlayItem>, Void, Arr
 
 			GeoPoint point = new GeoPoint(lat,lng);
 		//	new GeoPoint()
-			OverlayItem overlayitem = new OverlayItem(point, stationName, metar);
+			OverlayItem overlayitem = new OverlayItem(point, stationName+" (" + icao + ")", metar);
 			//args[0].addOverlay(overlayitem);
 			args[0].add(overlayitem);
 		}

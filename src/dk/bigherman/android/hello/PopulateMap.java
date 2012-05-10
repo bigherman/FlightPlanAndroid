@@ -17,7 +17,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-public class PopulateMap extends AsyncTask<HelloItemizedOverlay, Void, HelloItemizedOverlay>
+public class PopulateMap extends AsyncTask<AirfieldItemizedOverlay, Void, AirfieldItemizedOverlay>
 {
 	private ProgressDialog dialog;
 	private Context myMap;
@@ -39,7 +39,7 @@ public class PopulateMap extends AsyncTask<HelloItemizedOverlay, Void, HelloItem
     }
 	
 	@Override
-	protected HelloItemizedOverlay doInBackground(HelloItemizedOverlay... itemizedoverlay)
+	protected AirfieldItemizedOverlay doInBackground(AirfieldItemizedOverlay... itemizedoverlay)
 	{
 		XmlPullParserFactory factory = null;
 		XmlPullParser xpp = null;
@@ -126,7 +126,7 @@ public class PopulateMap extends AsyncTask<HelloItemizedOverlay, Void, HelloItem
 		return itemizedoverlay[0];
 	}
 	
-	protected void onPostExecute(HelloItemizedOverlay result)
+	protected void onPostExecute(AirfieldItemizedOverlay result)
 	{
 		Log.i("PopulateMap", "onPostExecute, result size=" + result.size());
         this.dialog.dismiss();

@@ -1,7 +1,7 @@
 package dk.bigherman.android.hello;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -12,21 +12,20 @@ import android.view.MotionEvent;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.MapView;
-import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
 
-public class HelloItemizedOverlay extends ItemizedOverlay<OverlayItem>
+public class AirfieldItemizedOverlay extends ItemizedOverlay<OverlayItem>
 {
 	private ArrayList<OverlayItem> mOverlays = new ArrayList<OverlayItem>();
 	private Context mContext;
 	private int clickTrack = 0;
-	public HelloItemizedOverlay(Drawable defaultMarker) 
+	public AirfieldItemizedOverlay(Drawable defaultMarker) 
 	{
 		super(boundCenterBottom(defaultMarker));
 		populate();
 	}
 	
-	public HelloItemizedOverlay(Drawable defaultMarker, Context context) 
+	public AirfieldItemizedOverlay(Drawable defaultMarker, Context context) 
 	{
 		  super(boundCenterBottom(defaultMarker));
 		  mContext = context;
@@ -64,10 +63,12 @@ public class HelloItemizedOverlay extends ItemizedOverlay<OverlayItem>
 		//System.out.println(item.getTitle());
 		//System.out.println(item.getSnippet());
 		dialog.setTitle(item.getTitle());
-		dialog.setMessage(item.getSnippet());
+		//dialog.setMessage(item.getSnippet());
 		
 		//dialog.setTitle("This is a test!");
-		dialog.show();
+		//dialog.show();
+
+		new PopulateMapDialog(mContext, dialog).execute(item.getTitle());
 		
 		return true;
 	}
@@ -77,10 +78,7 @@ public class HelloItemizedOverlay extends ItemizedOverlay<OverlayItem>
 	public boolean onTouchEvent(MotionEvent event, MapView mapView)
     {
     	super.onTouchEvent(event, mapView);
-    	if (event.getAction() == MotionEvent.ACTION_UP) {
-    		if (this.clickTrack == 0) {
-    			this.clickTrack = 1;
-    		} else {
+    	if (event.getAction() == MotionEvent.ACTION_MOVE) {
     		GeoPoint geoPoint = mapView.getProjection().fromPixels(0,0);
     		double minLong = (double)geoPoint.getLongitudeE6()/(double)1E6;
     		double maxLat  = (double)geoPoint.getLatitudeE6()/(double)1E6;
@@ -111,8 +109,6 @@ public class HelloItemizedOverlay extends ItemizedOverlay<OverlayItem>
     	    //this.populate();
 
     	    //Log.i("airfields","Map Invalidated");
-    	    this.clickTrack = 0;
-    		}
         }
 
     	

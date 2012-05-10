@@ -33,6 +33,7 @@ public class MyMap extends MapActivity
         mapView = (MapView) findViewById(R.id.mapView);
         mapView.setBuiltInZoomControls(true); 
         mapView.displayZoomControls(true);
+        mapView.getZoomButtonsController().setAutoDismissed(false);
         
         try {
         	initMap();
@@ -68,7 +69,7 @@ public class MyMap extends MapActivity
         
         List<Overlay> mapOverlays = mapView.getOverlays();
         Drawable drawable = this.getResources().getDrawable(R.drawable.icn_empty);
-        HelloItemizedOverlay itemizedoverlay = new HelloItemizedOverlay(drawable, this);
+        AirfieldItemizedOverlay itemizedoverlay = new AirfieldItemizedOverlay(drawable, this);
 		
 		mapView = (MapView) findViewById(R.id.mapView);
 	    mapView.displayZoomControls(true);
