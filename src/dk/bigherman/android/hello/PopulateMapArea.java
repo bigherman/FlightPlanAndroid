@@ -65,9 +65,6 @@ public class PopulateMapArea extends AsyncTask<ArrayList<OverlayItem>, Void, Arr
 			String metar = "No metar available";
 			String stationName = airfields.get(i).getName();
 
-			//System.out.println(airfields.get(i).getName());
-			//System.out.println(airfields.get(i).getIcaoCode());
-
 			GeoPoint point = new GeoPoint(lat,lng);
 			OverlayItem overlayitem = new OverlayItem(point, stationName, metar);
 			//args[0].addOverlay(overlayitem);

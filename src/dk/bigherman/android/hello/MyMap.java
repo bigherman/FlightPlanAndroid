@@ -10,12 +10,13 @@ import android.database.SQLException;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
+
 import org.xmlpull.v1.*;
 
 public class MyMap extends MapActivity 
 {
 	private MapView mapView;
-    
     public MyMap()
     {
     	

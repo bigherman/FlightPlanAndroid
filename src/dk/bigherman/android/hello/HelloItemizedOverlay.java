@@ -12,6 +12,7 @@ import android.view.MotionEvent;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.MapView;
+import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
 
 public class HelloItemizedOverlay extends ItemizedOverlay<OverlayItem>
@@ -71,8 +72,10 @@ public class HelloItemizedOverlay extends ItemizedOverlay<OverlayItem>
 	}
 	
     @SuppressWarnings("unchecked")
+    @Override
 	public boolean onTouchEvent(MotionEvent event, MapView mapView)
     {
+    	super.onTouchEvent(event, mapView);
     	if (event.getAction() == MotionEvent.ACTION_UP) {
     		GeoPoint geoPoint = mapView.getProjection().fromPixels(0,0);
     		double minLong = (double)geoPoint.getLongitudeE6()/(double)1E6;
@@ -93,16 +96,16 @@ public class HelloItemizedOverlay extends ItemizedOverlay<OverlayItem>
     		ArrayList<OverlayItem> overlayItemList = new ArrayList<OverlayItem>();
     		
     		new PopulateMapArea(mapView.getContext(), mapArea).execute(overlayItemList);
-    		
+  
     		for (OverlayItem item : overlayItemList) {
     			this.addOverlay(item);
     		}
-    		
+
     	    mapView.invalidate();
     	    
     	    Log.i("airfields","Map Invalidated");
         	
-        	}
+        }
 
     	
 		return false;

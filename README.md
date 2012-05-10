@@ -1,5 +1,7 @@
 # FlightPlanAndroid
 ## Build instructions
+Project is built for Android 2.2.
+
 You will need to create the file res/values/maps_apikey.xml with following contents:
 ```<?xml version="1.0" encoding="utf-8"?>
 <resources>
