@@ -18,7 +18,6 @@ public class HelloItemizedOverlay extends ItemizedOverlay<OverlayItem>
 {
 	private ArrayList<OverlayItem> mOverlays = new ArrayList<OverlayItem>();
 	private Context mContext;
-	
 	public HelloItemizedOverlay(Drawable defaultMarker) 
 	{
 		super(boundCenterBottom(defaultMarker));
@@ -77,9 +76,9 @@ public class HelloItemizedOverlay extends ItemizedOverlay<OverlayItem>
     	if (event.getAction() == MotionEvent.ACTION_UP) {
     		GeoPoint geoPoint = mapView.getProjection().fromPixels(0,0);
     		double minLong = (double)geoPoint.getLongitudeE6()/(double)1E6;
-    		double minLat  = (double)geoPoint.getLatitudeE6()/(double)1E6;
+    		double maxLat  = (double)geoPoint.getLatitudeE6()/(double)1E6;
     		double maxLong = minLong+(double)mapView.getLongitudeSpan()/(double)1E6;
-    		double maxLat  = minLat+(double)mapView.getLatitudeSpan()/(double)1E6;
+    		double minLat  = maxLat-(double)mapView.getLatitudeSpan()/(double)1E6;
 
     		int minGridLong = (int)(Math.floor(minLong+180));
     		int minGridLat  = (int)(Math.floor(minLat+90));
@@ -100,9 +99,12 @@ public class HelloItemizedOverlay extends ItemizedOverlay<OverlayItem>
     		}
     		
     	    mapView.invalidate();
-    	    mapView.refreshDrawableState();
+    	    
     	    Log.i("airfields","Map Invalidated");
-    	}
+        	
+        	}
+
+    	
 		return false;
     }
 }
