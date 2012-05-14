@@ -10,6 +10,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.*;
+import android.util.Log;
 
 public class DataBaseHelper extends SQLiteOpenHelper
 {		 
@@ -114,7 +115,7 @@ public class DataBaseHelper extends SQLiteOpenHelper
 	    	//transfer bytes from the inputfile to the outputfile
 	    	byte[] buffer = new byte[1024];
 	    	int length;
-	    	while ((length = myInput.read(buffer))>0)
+	    	while ( (length = myInput.read(buffer)) > 0)
 	    	{
 	    		myOutput.write(buffer, 0, length);
 	    	}
@@ -180,18 +181,23 @@ public class DataBaseHelper extends SQLiteOpenHelper
 			ArrayList<Airfield> airfieldsInArea = new ArrayList<Airfield>();
 			Airfield airfield;
 			
-			Cursor myCursor = myDataBase.rawQuery("SELECT icao, lat, long, name FROM airfields WHERE tilerow >" + minRow +" AND tileRow<" + maxRow + " AND tilecol>" + minCol + " AND tilecol<" + maxCol, null);
+			Log.i("airfieldsInArea", "SELECT icao, lat, long, tilecol, tilerow, name FROM airfields "
+					+ "WHERE tilerow >=" + minRow +" AND tileRow<=" + maxRow + " AND tilecol>=" + minCol + " AND tilecol<=" + maxCol);
+			
+			Cursor myCursor = myDataBase.rawQuery("SELECT icao, lat, long, tilecol, tilerow, name FROM airfields "
+					+ "WHERE tilerow >=" + minRow +" AND tileRow<=" + maxRow + " AND tilecol>=" + minCol + " AND tilecol<=" + maxCol, null);
 			
 			myCursor.moveToNext();
 			
-			while (!myCursor.isAfterLast())
-			{
-				airfield = new Airfield (myCursor.getString(0), myCursor.getDouble(1), myCursor.getDouble(2), myCursor.getString(3));
+			while (!myCursor.isAfterLast()) {
+				airfield = new Airfield (myCursor.getString(0), myCursor.getDouble(1), myCursor.getDouble(2), myCursor.getInt(3), myCursor.getInt(4), myCursor.getString(5));
 				airfieldsInArea.add(airfield);
 				myCursor.moveToNext();
 			}
 			
 			myCursor.close();
+			
+			Log.i("airfieldsInArea", "Rows: " + airfieldsInArea.size());
 			
 			return airfieldsInArea;
 		}
